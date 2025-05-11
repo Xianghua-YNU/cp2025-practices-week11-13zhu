@@ -1,4 +1,3 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -166,4 +165,4 @@ if __name__ == "__main__":
     # 额外的测试用例 (可选)
     # print("\nTesting with different parameters (e.g., non-Helmholtz):")
     # plot_magnetic_field_streamplot(0.5, 0.5, 0.8)
-    # plot_magnetic_field_streamplot(0.3, 0.7, 0.6)
+    # plot_magnetic_field_strea
