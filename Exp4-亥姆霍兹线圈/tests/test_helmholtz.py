@@ -1,65 +1,169 @@
+
 import numpy as np
-import pytest
-import sys
-import os
+import matplotlib.pyplot as plt
 
-# 添加项目根目录到Python路径
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# --- 物理和线圈参数 ---
+MU0 = 4 * np.pi * 1e-7  # 真空磁导率 (T*m/A)
+I = 1.0  # 电流 (A) - 假设为1A，实际计算中常数因子可以合并
 
-# 导入解决方案实现
-#from solution.helmholtz_solution import Helmholtz_coils
-from helmholtz import Helmholtz_coils
+def Helmholtz_coils(r_low, r_up, d):
+    '''
+    计算亥姆霍兹线圈（或两个不同半径线圈）的磁场。
+    线圈平行于xy平面，圆心在z轴。
+    下方线圈半径 r_low，位于 z = -d/2。
+    上方线圈半径 r_up，位于 z = +d/2。
 
-@pytest.fixture
-def helmholtz_coils():
-    """创建测试用的亥姆霍兹线圈实例"""
-    return Helmholtz_coils
+    输入:
+        r_low (float): 下方线圈的半径 (m)
+        r_up (float): 上方线圈的半径 (m)
+        d (float): 两线圈中心之间的距离 (m)
+    返回:
+        Y_plot (np.ndarray): 用于绘图的 Y 坐标网格 (通常是 Y[:,:,0])
+        Z_plot (np.ndarray): 用于绘图的 Z 坐标网格 (通常是 Z[:,:,0])
+        By (np.ndarray): y方向的磁场分量 (T)
+        Bz (np.ndarray): z方向的磁场分量 (T)
+    '''
+    print(f"开始计算磁场: r_low={r_low}, r_up={r_up}, d={d}")
 
-def test_helmholtz_coils_output_shape(helmholtz_coils):
-    """测试输出形状"""
-    Y, Z, By, Bz = helmholtz_coils(0.5, 0.5, 0.5)
-    assert Y.shape == (25, 25, 20)
-    assert Z.shape == (25, 25, 20)
-    assert By.shape == (25, 25)
-    assert Bz.shape == (25, 25)
+    # 1. 定义积分角度 phi 和空间网格 y, z
+    #    phi_angles = np.linspace(0, 2*np.pi, 20) # 例如20个角度点
+    #    max_r = max(r_low, r_up)
+    #    y_coords = np.linspace(-2*max_r, 2*max_r, 25) # y坐标范围和点数
+    #    z_coords = np.linspace(-1.5*d, 1.5*d, 25)   # z坐标范围和点数 (调整范围以更好显示)
+    # 学生代码开始
+    phi_angles = None # 占位符
+    y_coords = None   # 占位符
+    z_coords = None   # 占位符
+    # 学生代码结束
 
-def test_helmholtz_coils_symmetry(helmholtz_coils):
-    """测试对称性"""
-    Y, Z, By, Bz = helmholtz_coils(0.5, 0.5, 0.5)
+    # 2. 创建三维网格 Y, Z, Phi (用于后续计算)
+    #    Y, Z, Phi = np.meshgrid(y_coords, z_coords, phi_angles)
+    # 学生代码开始
+    Y, Z, Phi = None, None, None # 占位符
+    # 学生代码结束
+
+    # 3. 计算到下方线圈 (r_low, 中心在 z=-d/2) 上各电流元的距离 dist1
+    #    dist1_sq = (r_low * np.cos(Phi))**2 + (Y - r_low * np.sin(Phi))**2 + (Z - (-d/2))**2
+    #    dist1 = np.sqrt(dist1_sq)
+    #    dist1[dist1 < 1e-9] = 1e-9 # 避免除零
+    # 学生代码开始
+    dist1 = None # 占位符
+    # 学生代码结束
+
+    # 4. 计算到上方线圈 (r_up, 中心在 z=+d/2) 上各电流元的距离 dist2
+    #    dist2_sq = (r_up * np.cos(Phi))**2 + (Y - r_up * np.sin(Phi))**2 + (Z - (d/2))**2
+    #    dist2 = np.sqrt(dist2_sq)
+    #    dist2[dist2 < 1e-9] = 1e-9
+    # 学生代码开始
+    dist2 = None # 占位符
+    # 学生代码结束
+
+    # 5. 计算磁场贡献的被积函数 dBy_integrand 和 dBz_integrand
+    #    dBy_integrand = r_low * (Z - (-d/2)) * np.sin(Phi) / dist1**3 + \
+    #                    r_up  * (Z - (d/2))  * np.sin(Phi) / dist2**3
+    #    dBz_integrand = r_low * (r_low - Y * np.sin(Phi)) / dist1**3 + \
+    #                    r_up  * (r_up  - Y * np.sin(Phi)) / dist2**3
+    # 学生代码开始
+    dBy_integrand = None # 占位符
+    dBz_integrand = None # 占位符
+    # 学生代码结束
+
+    # 6. 对 phi_angles 进行数值积分 (例如使用 np.trapezoid)
+    #    delta_phi = phi_angles[1] - phi_angles[0] # 如果trapz的dx参数需要
+    #    By_unscaled = np.trapezoid(dBy_integrand, x=phi_angles, axis=-1) # 或 dx=delta_phi
+    #    Bz_unscaled = np.trapezoid(dBz_integrand, x=phi_angles, axis=-1) # 或 dx=delta_phi
+    # 学生代码开始
+    By_unscaled = None # 占位符
+    Bz_unscaled = None # 占位符
+    # 学生代码结束
+
+    # 7. 引入物理常数因子得到真实的磁场值 (单位 T)
+    #    scaling_factor = (MU0 * I) / (4 * np.pi)
+    #    By = scaling_factor * By_unscaled
+    #    Bz = scaling_factor * Bz_unscaled
+    # 学生代码开始
+    By = None # 占位符
+    Bz = None # 占位符
+    # 学生代码结束
     
-    # 测试y方向对称性 - 确保比较相同大小的数组
-    mid = By.shape[1] // 2
-    left_half = By[:, :mid]
-    right_half = By[:, mid+1:] if By.shape[1] % 2 != 0 else By[:, mid:]
-    assert np.allclose(left_half, -right_half[:, ::-1])
-    
-    # 测试z方向对称性
-    mid = Bz.shape[0] // 2
-    top_half = Bz[:mid]
-    bottom_half = Bz[mid+1:] if Bz.shape[0] % 2 != 0 else Bz[mid:]
-    assert np.allclose(top_half, bottom_half[::-1])
+    print("磁场计算完成.")
+    # 返回用于绘图的2D网格 (取一个phi切片) 和计算得到的磁场分量
+    # return Y[:,:,0], Z[:,:,0], By, Bz
+    return None, None, None, None # 学生需要修改返回值
 
-def test_helmholtz_coils_center_field(helmholtz_coils):
-    """测试中心点磁场"""
-    Y, Z, By, Bz = helmholtz_coils(0.5, 0.5, 0.5)
-    
-    # 中心点应该在网格中间
-    center_y = Y.shape[1] // 2
-    center_z = Z.shape[0] // 2
-    
-    # 中心点径向场应为0
-    assert abs(By[center_z, center_y]) < 1e-10
-    # 中心点轴向场应大于0
-    assert Bz[center_z, center_y] > 0
 
-def test_helmholtz_coils_field_scaling(helmholtz_coils):
-    """测试磁场与半径的关系"""
-    Y1, Z1, By1, Bz1 = helmholtz_coils(0.5, 0.5, 0.5)
-    Y2, Z2, By2, Bz2 = helmholtz_coils(1.0, 1.0, 1.0)
-    
-    # 磁场强度应与半径成反比
-    assert np.allclose(By1 * 2, By2, atol=1e-2)
-    assert np.allclose(Bz1 * 2, Bz2, atol=1e-2)
+def plot_magnetic_field_streamplot(r_coil_1, r_coil_2, d_coils):
+    """
+    调用 Helmholtz_coils 计算磁场，并使用流线图可视化。
+    """
+    print(f"开始绘图准备: r_coil_1={r_coil_1}, r_coil_2={r_coil_2}, d_coils={d_coils}")
+    # 1. 调用 Helmholtz_coils 函数获取磁场数据
+    #    Y_plot, Z_plot, By_field, Bz_field = Helmholtz_coils(r_coil_1, r_coil_2, d_coils)
+    # 学生代码开始
+    Y_plot, Z_plot, By_field, Bz_field = None, None, None, None # 占位符
+    # 学生代码结束
 
-if __name__ == '__main__':
-    pytest.main([__file__])
+    if Y_plot is None: # 检查计算是否成功
+        print("磁场数据未计算，无法绘图。")
+        return
+
+    plt.figure(figsize=(8, 7))
+
+    # 2. (可选) 定义流线图的起始点，可以参考solution或自行设置
+    #    y_start_coords = np.arange(-0.8*max(r_coil_1, r_coil_2), 0.85*max(r_coil_1, r_coil_2), 0.1*max(r_coil_1, r_coil_2))
+    #    sy, sz = np.meshgrid(y_start_coords, 0) # 例如从z=0平面开始
+    #    start_points = np.vstack([sy.ravel(), sz.ravel()]).T
+    # 学生代码开始
+    start_points = None # 占位符, 如果为None，streamplot会自动选择起点
+    # 学生代码结束
+
+    # 3. 使用 plt.streamplot 绘制磁场流线图
+    #    plt.streamplot(Y_plot, Z_plot, By_field, Bz_field,
+    #                   density=1.5, color='k', linewidth=1.0,
+    #                   arrowstyle='->', arrowsize=1.0, start_points=start_points)
+    # 学生代码开始
+    pass # 占位符
+    # 学生代码结束
+
+    # 4. 绘制线圈的截面位置 (用于参考)
+    #    下方线圈 (r_coil_1, z=-d_coils/2)
+    #    plt.plot([-r_coil_1, -r_coil_1], [-d_coils/2-0.02, -d_coils/2+0.02], 'b-', linewidth=3) # 左边缘
+    #    plt.plot([r_coil_1, r_coil_1], [-d_coils/2-0.02, -d_coils/2+0.02], 'b-', linewidth=3)   # 右边缘
+    #    plt.text(0, -d_coils/2 - 0.1*max(r_coil_1,r_coil_2,d_coils), f'Coil 1 (R={r_coil_1})', color='blue', ha='center')
+    #    上方线圈 (r_coil_2, z=+d_coils/2)
+    #    plt.plot([-r_coil_2, -r_coil_2], [d_coils/2-0.02, d_coils/2+0.02], 'r-', linewidth=3)
+    #    plt.plot([r_coil_2, r_coil_2], [d_coils/2-0.02, d_coils/2+0.02], 'r-', linewidth=3)
+    #    plt.text(0, d_coils/2 + 0.1*max(r_coil_1,r_coil_2,d_coils), f'Coil 2 (R={r_coil_2})', color='red', ha='center')
+    # 学生代码开始
+    pass # 占位符
+    # 学生代码结束
+
+    # 5. 设置图形属性
+    #    plt.xlabel('y / m')
+    #    plt.ylabel('z / m')
+    #    plt.title(f'Magnetic Field Lines (R1={r_coil_1}, R2={r_coil_2}, d={d_coils})')
+    #    plt.gca().set_aspect('equal', adjustable='box')
+    #    plt.grid(True, linestyle='--', alpha=0.7)
+    #    # plt.legend() # 如果有label的plot元素
+    # 学生代码开始
+    pass # 占位符
+    # 学生代码结束
+
+    plt.show()
+    print("绘图完成.")
+
+# --- 主程序 ---
+if __name__ == "__main__":
+    # 定义线圈参数 - 学生可以修改这些值进行测试
+    # 标准亥姆霍兹线圈: r1 = r2 = R, d = R
+    radius_1 = 0.5  # 下方线圈半径 (m)
+    radius_2 = 0.5  # 上方线圈半径 (m)
+    distance_between_coils = 0.5  # 两线圈中心距离 (m)
+
+    # 调用绘图函数，该函数内部会调用计算函数
+    plot_magnetic_field_streamplot(radius_1, radius_2, distance_between_coils)
+
+    # 额外的测试用例 (可选)
+    # print("\nTesting with different parameters (e.g., non-Helmholtz):")
+    # plot_magnetic_field_streamplot(0.5, 0.5, 0.8)
+    # plot_magnetic_field_streamplot(0.3, 0.7, 0.6)
