@@ -62,4 +62,4 @@ def plot_magnetic_field_streamplot(r_low, r_up, d):
 if __name__ == "__main__":
     coil_radius = 0.5  # 两个线圈的半径 (m)
     coil_distance = 0.8  # 两个线圈之间的距离 (m)
-    plot_magnetic_field_streamplot(coil_radius, coil_radius, coil_distance)
+    plot_magnetic_field_streamplot(coi
